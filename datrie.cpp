@@ -28,23 +28,35 @@ void DATrie::Insert(std::string word)
 		else if (cur != cVal && GetBaseVal(next) < 0) // collision
 		{
 			std::string tail = GetTail(GetBaseVal(next));
-			if (tail == substr)
-			{
-				break;
-			}
-			else
+			substr.push_back('#');
+			if (tail != substr)
 			{
 				int i = 0;
+				int c = cur;
 				while (tail[i] == substr[i])
 				{
 					int q = 1;
 					char ch = tail[i];
 					while (GetCheckVal(GetArcVal(ch) + q) == 0)
 						++q;
-					SetBaseVal(cur, )
+					SetBaseVal(c, q);
+					c = GetArcVal(ch) + q;
 				}
 				
+				int qq = 1;
+				while (GetCheckVal(GetArcVal(substr[i]) + qq)) == 0 &&
+					GetCheckVal(GetArcVal(tail[i] + qq) == 0)
+					++qq;
+				std::string s1 = substr.substr(i + 1, substr.size() - i - 1);
+				SetBaseVal(GetArcVal(substr[i] + qq), -AddToTails(s1));
+				std::string s2 = tail.substr(i + 1, tail.size() - i - 1);
+				SetBaseVal(GetArcVal(tail[i] + qq) -AddToTails(s2));
 			}
+			break;
+		}
+		else if (cur != cVal && GetBaseVal(cur) > 0)
+		{
+			// most complicated case
 		}
 		cur = next;
 	}
