@@ -16,7 +16,7 @@ inline bool Assert(PCSTR file, int line, PCSTR msg)
 	return true;
 }
 
-#define YZ_ASSERT(b) (!(b) && Assert(__FILE__, __LINE__, #b ))
+#define YASSERT(b) (!(b) && Assert(__FILE__, __LINE__, #b ))
 #define YZ_ASSERT2(b, msg) (!(b) && Assert(__FILE__, __LINE__, msg))
 
 class DATrie
@@ -34,9 +34,9 @@ private:
 	void SetCheckVal(int idx, int val);
 	int AddToTails(std::string tail);
 	std::string GetTail(int idx);
-	std::vector<int> CollectNextNodes(int idx);
+	std::vector<int> CollectNextNodes(int cur);
 	int ProbeValidVal(const std::vector<char> &vec);
-	void Relocate(int s, int b, const std::vector<int> &vecNext);
+	void Relocate(int s, int b, const std::vector<char> &vecNext);
 
 private:
 	std::vector<int> m_vecBase;
