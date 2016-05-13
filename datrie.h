@@ -27,12 +27,16 @@ public:
 
 private:
 	int GetArcVal(char ch);
+	char GetArcChar(int val);
 	int GetBaseVal(int idx);
 	void SetBaseVal(int idx, int val);
 	int GetCheckVal(int idx);
-	void SetCheckVal(int idx);
+	void SetCheckVal(int idx, int val);
 	int AddToTails(std::string tail);
 	std::string GetTail(int idx);
+	std::vector<int> CollectNextNodes(int idx);
+	int ProbeValidVal(const std::vector<char> &vec);
+	void Relocate(int s, int b, const std::vector<int> &vecNext);
 
 private:
 	std::vector<int> m_vecBase;
