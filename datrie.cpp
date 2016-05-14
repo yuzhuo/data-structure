@@ -25,6 +25,9 @@ void DATrie::Insert(std::string word)
 			{
 				int j = 0;
 				int c = next;
+				if (tail[j] == substr[j])
+					RemoveTail(GetBaseVal(next));
+
 				while (tail[j] == substr[j])
 				{
 					char ch = tail[j];
@@ -42,12 +45,12 @@ void DATrie::Insert(std::string word)
 				vec.push_back(tail[j]);
 				int qq = ProbeValidVal(vec);
 				SetBaseVal(c, qq);
-				std::string s1 = substr.substr(j, substr.size() - j);
-				SetBaseVal(GetArcVal(substr[j] + qq), AddToTails(s1));
-				SetCheckVal(GetArcVal(substr[j] + qq), c);
-				std::string s2 = tail.substr(j, tail.size() - j);
-				SetBaseVal(GetArcVal(tail[j] + qq), AddToTails(s2));
-				SetCheckVal(GetArcVal(tail[j] + qq), c);
+				std::string s1 = substr.substr(j + 1, substr.size() - j - 1);
+				SetBaseVal(GetArcVal(substr[j]) + qq, AddToTails(s1));
+				SetCheckVal(GetArcVal(substr[j]) + qq, c);
+				std::string s2 = tail.substr(j + 1, tail.size() - j - 1);
+				SetBaseVal(GetArcVal(tail[j]) + qq, AddToTails(s2));
+				SetCheckVal(GetArcVal(tail[j]) + qq, c);
 			}
 			break;
 		}
@@ -78,15 +81,53 @@ void DATrie::Insert(std::string word)
 	}
 }
 
+bool DATrie::Retrieve(std::string word)
+{
+	word.push_back('#');
+	int cur = 1;
+	int next = -1;
+	int i = 0;
+	for (int i = 0, n = word.size(); i < n; ++i)
+	{
+		std::string substr = word.substr(i + 1, n - i - 1);
+		next = GetBaseVal(cur) + GetArcVal(word[i]);
+		if (GetCheckVal(next) == cur)
+		{
+			if (GetBaseVal(next) < 0)
+			{
+				if (GetTail(GetBaseVal(next)) == substr)
+					return true;
+				else
+					return false;
+			}
+			else
+			{
+				cur = next;
+				continue;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return false;
+}
+
 int DATrie::GetArcVal(char ch)
 {
-	YASSERT (ch >= 'a' && ch <= 'z');
+	YASSERT (ch >= 'a' && ch <= 'z' || ch == '#');
 
+	if (ch == '#')
+		return 27;
 	return ch - 'a' + 1;
 }
 
 char DATrie::GetArcChar(int val)
 {
+	YASSERT(val >= 1 && val <= 27);
+	if (val == 27)
+		return '#';
 	return val + 'a' - 1;
 }
 
@@ -124,8 +165,14 @@ void DATrie::SetCheckVal(int idx, int val)
 
 int DATrie::AddToTails(std::string tail)
 {
+	// YASSERT (!tail.empty());
 	m_isTails.insert(make_pair(m_isTails.size() + 1, tail));
 	return -static_cast<int>(m_isTails.size());
+}
+
+void DATrie::RemoveTail(int idx)
+{
+	// m_isTails.erase(-idx);
 }
 
 std::string DATrie::GetTail(int idx)
@@ -176,7 +223,7 @@ void DATrie::Relocate(int s, int b, const std::vector<char> &vecNext)
 		std::vector<int> vec = CollectNextNodes(GetBaseVal(s) + val);
 		for (int ii = 0, nn = vec.size(); ii < nn; ++ii)
 		{
-			SetCheckVal(vec[ii] + GetBaseVal(GetBaseVal(s) + val), b + val);
+			SetCheckVal(vec[ii], b + val);
 		}
 		SetBaseVal(GetBaseVal(s) + val, 0);
 		SetCheckVal(GetBaseVal(s) + val, 0);

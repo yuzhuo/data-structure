@@ -12,18 +12,21 @@ inline bool Assert(PCSTR file, int line, PCSTR msg)
 
 	char buf[256];
 	sprintf_s(buf, 256, "file: %s, line: %d, msg: %s", file, line, msg);
-	MessageBoxA(nullptr, buf, "warning", MB_OK | MB_ICONWARNING);
-	return true;
+	int ret = MessageBoxA(nullptr, buf, "warning", MB_RETRYCANCEL | MB_ICONWARNING);
+	if (IDRETRY == ret)
+		return true;
+	return false;
 }
 
-#define YASSERT(b) (!(b) && Assert(__FILE__, __LINE__, #b ))
-#define YZ_ASSERT2(b, msg) (!(b) && Assert(__FILE__, __LINE__, msg))
+#define YASSERT(b) if (!(b) && Assert(__FILE__, __LINE__, #b )) __asm int 3;
+#define YZ_ASSERT2(b, msg) if (!(b) && Assert(__FILE__, __LINE__, msg)) _asm int 3;
 
 class DATrie
 {
 public:
 	DATrie();
 	void Insert(std::string word);
+	bool Retrieve(std::string word);
 
 private:
 	int GetArcVal(char ch);
@@ -33,6 +36,7 @@ private:
 	int GetCheckVal(int idx);
 	void SetCheckVal(int idx, int val);
 	int AddToTails(std::string tail);
+	void RemoveTail(int idx);
 	std::string GetTail(int idx);
 	std::vector<int> CollectNextNodes(int cur);
 	int ProbeValidVal(const std::vector<char> &vec);
