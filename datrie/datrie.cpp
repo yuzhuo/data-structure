@@ -134,7 +134,7 @@ char DATrie::GetArcChar(int val)
 int DATrie::GetBaseVal(int idx)
 {
 	YASSERT (idx >= 0);
-	if (idx >= m_vecBase.size())
+	if (idx >= static_cast<int>(m_vecBase.size()))
 		return 0;
 	return m_vecBase[idx];
 }
@@ -142,7 +142,7 @@ int DATrie::GetBaseVal(int idx)
 void DATrie::SetBaseVal(int idx, int val)
 {
 	YASSERT (idx >= 0);
-	if (idx >= m_vecBase.size())
+	if (idx >= static_cast<int>(m_vecBase.size()))
 		m_vecBase.resize(idx + 1, 0);
 	m_vecBase[idx] = val;
 }
@@ -150,7 +150,7 @@ void DATrie::SetBaseVal(int idx, int val)
 int DATrie::GetCheckVal(int idx)
 {
 	YASSERT (idx >= 0);
-	if (idx >= m_vecCheck.size())
+	if (idx >= static_cast<int>(m_vecCheck.size()))
 		return 0;
 	return m_vecCheck[idx];
 }
@@ -158,7 +158,7 @@ int DATrie::GetCheckVal(int idx)
 void DATrie::SetCheckVal(int idx, int val)
 {
 	YASSERT (idx >= 0);
-	if (idx >= m_vecCheck.size())
+	if (idx >= static_cast<int>(m_vecCheck.size()))
 		m_vecCheck.resize(idx + 1);
 	m_vecCheck[idx] = val;
 }

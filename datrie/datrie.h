@@ -18,6 +18,7 @@ inline bool Assert(PCSTR file, int line, PCSTR msg)
 	return false;
 }
 
+// you'd better surround the two macros by curly brace.
 #define YASSERT(b) if (!(b) && Assert(__FILE__, __LINE__, #b )) __asm int 3;
 #define YZ_ASSERT2(b, msg) if (!(b) && Assert(__FILE__, __LINE__, msg)) _asm int 3;
 
