@@ -116,3 +116,14 @@ int main()
 
 	return 0;
 }
+
+//int main()
+//{
+//	DATrie trie;
+//	trie.Insert("cab");
+//	trie.Insert("cac");
+//	trie.Insert("acb");
+//	trie.Insert("acc");
+//
+//	return 0;
+//}

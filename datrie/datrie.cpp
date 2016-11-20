@@ -197,19 +197,19 @@ std::vector<int> DATrie::CollectNextNodes(int cur)
 
 int DATrie::ProbeValidVal(const std::vector<char> &vec)
 {
-	int q = 1;
+	int q = 0;
 	bool bFind = false;
 	while (!bFind)
 	{
+		++q;
 		bFind = true;
 		for (int i = 0, n = vec.size(); i < n; ++i)
 		{
 			if (GetCheckVal(q + GetArcVal(vec[i])) != 0)
 				bFind = false;
 		}
-		++q;
 	}
-	return q - 1;
+	return q;
 }
 
 void DATrie::Relocate(int s, int b, const std::vector<char> &vecNext)
@@ -219,14 +219,15 @@ void DATrie::Relocate(int s, int b, const std::vector<char> &vecNext)
 		int val = GetArcVal(vecNext[i]);
 		YASSERT (GetCheckVal(b + val) == 0);
 		SetCheckVal(b + val, s);
-		SetBaseVal(b + val, GetBaseVal(GetBaseVal(s) + val));
-		std::vector<int> vec = CollectNextNodes(GetBaseVal(s) + val);
+		int t = GetBaseVal(s) + val;
+		SetBaseVal(b + val, GetBaseVal(t));
+		std::vector<int> vec = CollectNextNodes(t);
 		for (int ii = 0, nn = vec.size(); ii < nn; ++ii)
 		{
 			SetCheckVal(vec[ii], b + val);
 		}
-		SetBaseVal(GetBaseVal(s) + val, 0);
-		SetCheckVal(GetBaseVal(s) + val, 0);
+		SetBaseVal(t, 0);
+		SetCheckVal(t, 0);
 	}
 	SetBaseVal(s, b);
 }
